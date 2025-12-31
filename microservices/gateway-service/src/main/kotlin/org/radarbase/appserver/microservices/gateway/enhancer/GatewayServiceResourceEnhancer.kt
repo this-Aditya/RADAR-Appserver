@@ -22,8 +22,10 @@ import org.glassfish.jersey.server.ResourceConfig
 import org.glassfish.jersey.server.validation.ValidationFeature
 import org.radarbase.appserver.microservices.core.exception.handler.UnhandledExceptionMapper
 import org.radarbase.appserver.microservices.gateway.config.GatewayConfig
+import org.radarbase.appserver.microservices.gateway.health.GatewayServiceHealthMetric
 import org.radarbase.appserver.microservices.gateway.service.GatewayService
 import org.radarbase.jersey.enhancer.JerseyResourceEnhancer
+import org.radarbase.jersey.service.HealthService
 
 class GatewayServiceResourceEnhancer(
     private val config: GatewayConfig,
@@ -44,6 +46,11 @@ class GatewayServiceResourceEnhancer(
 
         bind(GatewayService::class.java)
             .to(GatewayService::class.java)
+            .`in`(Singleton::class.java)
+
+        bind(GatewayServiceHealthMetric::class.java)
+            .named("gateway-service")
+            .to(HealthService.Metric::class.java)
             .`in`(Singleton::class.java)
     }
 

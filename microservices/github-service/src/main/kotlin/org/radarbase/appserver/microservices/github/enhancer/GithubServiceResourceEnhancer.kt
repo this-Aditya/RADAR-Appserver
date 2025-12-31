@@ -22,10 +22,12 @@ import org.glassfish.jersey.server.ResourceConfig
 import org.glassfish.jersey.server.validation.ValidationFeature
 import org.radarbase.appserver.microservices.core.exception.handler.UnhandledExceptionMapper
 import org.radarbase.appserver.microservices.github.config.GithubServiceConfig
+import org.radarbase.appserver.microservices.github.health.GithubServiceHealthMetric
 import org.radarbase.appserver.microservices.github.service.GithubService
 import org.radarbase.appserver.microservices.github.service.client.GithubClient
 import org.radarbase.jersey.enhancer.JerseyResourceEnhancer
 import org.radarbase.jersey.service.AsyncCoroutineService
+import org.radarbase.jersey.service.HealthService
 import org.radarbase.jersey.service.ScopedAsyncCoroutineService
 
 class GithubServiceResourceEnhancer(private val config: GithubServiceConfig) : JerseyResourceEnhancer {
@@ -49,6 +51,11 @@ class GithubServiceResourceEnhancer(private val config: GithubServiceConfig) : J
 
         bind(ScopedAsyncCoroutineService::class.java)
             .to(AsyncCoroutineService::class.java)
+            .`in`(Singleton::class.java)
+
+        bind(GithubServiceHealthMetric::class.java)
+            .named("github-service")
+            .to(HealthService.Metric::class.java)
             .`in`(Singleton::class.java)
     }
 

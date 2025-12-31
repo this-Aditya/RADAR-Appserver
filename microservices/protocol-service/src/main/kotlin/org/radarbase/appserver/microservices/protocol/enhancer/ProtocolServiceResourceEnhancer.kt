@@ -33,10 +33,12 @@ import org.radarbase.appserver.microservices.core.mapper.UserMapper
 import org.radarbase.appserver.microservices.core.service.github.protocol.ProtocolFetcherStrategy
 import org.radarbase.appserver.microservices.core.service.github.protocol.ProtocolGenerator
 import org.radarbase.appserver.microservices.protocol.config.ProtocolServiceConfig
+import org.radarbase.appserver.microservices.protocol.health.ProtocolServiceHealthMetric
 import org.radarbase.appserver.microservices.protocol.service.DefaultProtocolGenerator
 import org.radarbase.appserver.microservices.protocol.service.GithubProtocolFetcherStrategy
 import org.radarbase.jersey.enhancer.JerseyResourceEnhancer
 import org.radarbase.jersey.service.AsyncCoroutineService
+import org.radarbase.jersey.service.HealthService
 import org.radarbase.jersey.service.ScopedAsyncCoroutineService
 
 class ProtocolServiceResourceEnhancer(private val config: ProtocolServiceConfig) : JerseyResourceEnhancer {
@@ -68,6 +70,11 @@ class ProtocolServiceResourceEnhancer(private val config: ProtocolServiceConfig)
 
         bind(ScopedAsyncCoroutineService::class.java)
             .to(AsyncCoroutineService::class.java)
+            .`in`(Singleton::class.java)
+
+        bind(ProtocolServiceHealthMetric::class.java)
+            .named("protocol-service")
+            .to(HealthService.Metric::class.java)
             .`in`(Singleton::class.java)
     }
 
