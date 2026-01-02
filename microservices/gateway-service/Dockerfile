@@ -23,6 +23,10 @@ RUN gradle jar
 
 FROM eclipse-temurin:17-jre
 
+RUN echo "==== third-party contents ====" \
+ && ls -l /code/microservices/gateway-service/build/third-party \
+ || echo "third-party directory not found"
+
 COPY --from=builder /code/microservices/gateway-service/build/scripts/* /usr/bin/
 COPY --from=builder /code/microservices/gateway-service/build/third-party/* /usr/lib/
 COPY --from=builder /code/microservices/gateway-service/build/libs/*.jar /usr/lib/
