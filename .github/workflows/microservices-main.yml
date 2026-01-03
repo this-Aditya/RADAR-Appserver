@@ -116,6 +116,23 @@ jobs:
             echo "cache-to=type=local,dest=/tmp/.buildx-cache-new,mode=max" >> $GITHUB_OUTPUT
           fi
 
+      - name: Test repo
+        run: |
+          echo "== repo tree (top-level microservices) =="
+          ls -la microservices || true
+          echo find microservices -maxdepth 3 -type f | sed -n '1,200p'
+
+      - name: Debug list and Gradle dependency resolution
+        run: |
+          echo "== microservices tree =="
+          ls -la microservices || true
+          echo
+          ./gradlew :microservices:gateway-service:dependencies --configuration runtimeClasspath --no-daemon --console=plain
+          ./gradlew :microservices:gateway-service:copyDependencies --no-daemon --info --console=plain || true
+          echo "== third-party after copyDependencies =="
+          ls -lah microservices/gateway-service/build/third-party || true
+          sha256sum microservices/gateway-service/build/third-party/* 2>/dev/null || true
+
       - name: Build docker
         uses: docker/build-push-action@v3
         with:
