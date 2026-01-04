@@ -51,13 +51,13 @@ jobs:
       fail-fast: false
       matrix:
         service:
-          - project-service
-          - user-service
+          # - project-service
+          # - user-service
           - gateway-service
-          - protocol-service
-          - github-service
-          - task-service
-          - cloud-messaging-service
+          # - protocol-service
+          # - github-service
+          # - task-service
+          # - cloud-messaging-service
     env:
       REGISTRY: ghcr.io
       REPOSITORY: ${{ github.repository }}
@@ -136,6 +136,9 @@ jobs:
           echo "== repo tree (top-level microservices) =="
           ls -la microservices || true
           echo find microservices -maxdepth 3 -type f | sed -n '1,200p'
+
+      - name: Assemble ${{ matrix.service }} 
+        run: ./gradlew --no-daemon :microservices:${{ matrix.service }}:assemble
 
       - name: Debug list and Gradle dependency resolution
         run: |
