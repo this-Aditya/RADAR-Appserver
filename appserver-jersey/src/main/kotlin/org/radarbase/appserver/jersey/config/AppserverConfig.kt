@@ -41,8 +41,7 @@ data class AppserverConfig(
         {
             copy(db = it)
         },
-    )
-        .copyOnChange(
+    ).copyOnChange(
             auth,
             {
                 it.withEnv()
@@ -50,8 +49,7 @@ data class AppserverConfig(
             {
                 copy(auth = it)
             },
-        )
-        .copyOnChange(
+        ).copyOnChange(
             github,
             {
                 it.withEnv()
@@ -66,7 +64,15 @@ data class AppserverConfig(
             },
             {
                 copy(email = it)
-            }
+            },
+        ).copyOnChange(
+            protocol,
+            {
+                it.withEnv()
+            },
+            {
+                copy(protocol = it)
+            },
         )
 
     override fun validate() {

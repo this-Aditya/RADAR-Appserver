@@ -16,8 +16,15 @@
 
 package org.radarbase.appserver.jersey.config.questionnaire
 
+import org.radarbase.jersey.config.ConfigLoader.copyEnv
+
 data class QuestionnaireProtocolConfig(
     val githubProtocolRepo: String = "RADAR-base/RADAR-aRMT-protocols",
     val protocolFileName: String = "protocol.json",
     val githubBranch: String = "master",
-)
+) {
+    fun withEnv() = this
+        .copyEnv("APPSERVER_ARMT_PROTOCOL_REPO") { copy(githubProtocolRepo = it) }
+        .copyEnv("APPSERVER_ARMT_PROTOCOL_FILE_NAME") { copy(protocolFileName = it) }
+        .copyEnv("APPSERVER_ARMT_PROTOCOL_BRANCH") { copy(githubBranch = it)}
+}

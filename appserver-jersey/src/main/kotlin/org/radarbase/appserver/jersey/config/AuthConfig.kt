@@ -26,6 +26,7 @@ data class AuthConfig(
 ) : Validation {
     fun withEnv() = this.
         copyEnv("MANAGEMENTPORTAL_BASE_URL") { copy(managementPortalUrl = it) }
+        .copyEnv("RADAR_APPSERVER_RESOURCE_NAME") { copy(resourceName = it) }
 
     override fun validate() {
         check(managementPortalUrl.isBlank() || publicKeyUrls.isNullOrEmpty()) {
